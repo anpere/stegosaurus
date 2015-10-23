@@ -14,44 +14,41 @@ def strToBits(strings):
 
 
 if __name__ == '__main__':
+    if (len(sys.argv)<4):
+        raise NameError( "Correct Usage: stego.py <medium image> <secretMessage.txt>")
     medium = sys.argv[1]
     source = sys.argv[2]
+    stego_name = sys.argv[3]
     sourceFile = file(source,'r')
-    im = Image.open(medium,'r')
-    width,height = im.size
-    pixel_values = list(im.getdata())
-    
+    print "reading image file"
+    medium_pic = Image.open(medium,'r')
+    width,height = medium_pic.size
+    pixel_values = list(medium_pic.getdata())
+    print "reading secret into file" 
     strings = sourceFile.readlines()
     
-    one = Image.new('RGB',(width,height),"black")
+    stego_image = Image.new('RGB',(width,height),"black")
     # create a new black image
-    original = Image.new('RGB',(width,height),"black")
-    copy = original.load()
-    p1 = one.load()
+    stego_array = stego_image.load()
     
     # Turn the file into a bitstring
+    print "converting file into bitstring"
     strings.append('eoftm')
-    print strings
     bitString = strToBits(strings)
-    print bitString 
-    
+    print "embedding secret into medium" 
     for i in range(len(pixel_values)):
         try:
             (a,b,c,d) = pixel_values[i]
         except ValueError:
             (a,b,c) = pixel_values[i]
-        copy[i%width,i/width] = (a,b,c)
         try:
             if bitString[i]=='1':
-                p1[i%width,i/width] = (a|0x01,b,c)
+                stego_array[i%width,i/width] = (a|0x01,b,c)
             else:
-                p1[i%width,i/width] = (a&0xfe,b,c)
+                stego_array[i%width,i/width] = (a&0xfe,b,c)
         except IndexError:
-            p1[i%width,i/width] = (a,b,c)
-    one.show()
-    one.save(source[:-4] + medium[:-4]+"Steg.png","png")
-    im.show()
-    original.show()
+            stego_array[i%width,i/width] = (a,b,c)
+    stego_image.save(stego_name,"png")
     
 
 
