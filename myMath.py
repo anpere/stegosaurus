@@ -11,10 +11,6 @@ def generatorLength(g,p):
             values[value]=1
             length+=1
     return length
-#    while(((g**i)%p) not in values):
-#        values[(g**i)%p] = 0
-#        values.append((g**i)%p)
-#        i+=1
 
 def isPrime(p):
     isPrime = True
