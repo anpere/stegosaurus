@@ -35,6 +35,7 @@ if __name__ == '__main__':
     print "converting file into bitstring"
     strings.append('eoftm')
     bitString = strToBits(strings)
+    print bitString
     print "embedding secret into medium" 
     for i in range(len(pixel_values)):
         try:
